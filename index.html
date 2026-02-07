@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff4e50, #f9d423);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.card {
+    background: rgba(255,255,255,0.22);
+    padding: 28px;
+    border-radius: 22px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 330px;
+    position: relative;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 1.9rem;
+    margin-bottom: 20px;
+    white-space: pre-line;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.yes {
+    background: #ff2e63;
+    color: white;
+}
+
+.runaway {
+    background: white;
+    color: #ff2e63;
+    position: absolute;
+}
+
+img {
+    width: 100%;
+    border-radius: 18px;
+    margin-top: 18px;
+    display: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.falling-heart, .confetti {
+    position: fixed;
+    top: -10px;
+    pointer-events: none;
+}
+
+.falling-heart {
+    font-size: 22px;
+    animation: fall linear forwards;
+}
+
+.confetti {
+    width: 8px;
+    height: 14px;
+    animation: confettiFall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1 id="question"></h1>
+
+    <div class="buttons" id="buttons">
+        <button class="yes" id="yesBtn" onclick="yesClicked()">YES 💖</button>
+        <button class="runaway" id="runBtn">YES 😌</button>
+    </div>
+
+    <img src="her.jpg" id="photo" alt="My Valentine">
+</div>
+
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6b6a6a0c6b.mp3?filename=romantic-ambient-11485.mp3">
+</audio>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const name = params.get("to") || "You";
+const from = params.get("from") || "Someone";
+
+const question = document.getElementById("question");
+const runBtn = document.getElementById("runBtn");
+const yesBtn = document.getElementById("yesBtn");
+const photo = document.getElementById("photo");
+const music = document.getElementById("music");
+
+let yesScale = 1;
+
+question.innerText = `${name} 🤍\nWill you be my Valentine?`;
+
+function moveButton() {
+    const x = Math.random() * 220 - 110;
+    const y = Math.random() * 180 - 90;
+    runBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+    // YES button grows 😈
+    yesScale += 0.12;
+    yesBtn.style.transform = `scale(${yesScale})`;
+}
+
+runBtn.addEventListener("mouseover", moveButton);
+runBtn.addEventListener("touchstart", moveButton);
+
+function yesClicked() {
+    question.innerText = `YAYYY 💘\nYou are my Valentine!\n— ${from}`;
+    document.getElementById("buttons").style.display = "none";
+    photo.style.display = "block";
+    music.play().catch(()=>{});
+
+    // Hearts rain
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "falling-heart";
+        heart.innerText = Math.random() > 0.5 ? "❤️" : "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }, 180);
+
+    // Confetti blast 🎉
+    for (let i = 0; i < 120; i++) {
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+        conf.style.left = Math.random() * 100 + "vw";
+        conf.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        conf.style.animationDuration = (3 + Math.random()*3) + "s";
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 6000);
+    }
+}
+</script>
+
+</body>
+</html>
